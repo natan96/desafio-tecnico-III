@@ -87,6 +87,7 @@
                   type="date"
                   class="form-control"
                   formControlName="dataNascimento"
+                  [max]="maxDate"
                   [class.is-invalid]="isFieldInvalid('dataNascimento')"
                 />
                 @if (isFieldInvalid('dataNascimento')) {

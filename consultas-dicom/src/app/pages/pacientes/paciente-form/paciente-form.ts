@@ -67,6 +67,7 @@ export class PacienteFormComponent implements OnInit {
   isEditing = false;
   pacienteId?: number;
   networkError = false;
+  maxDate = new Date().toISOString().split('T')[0];
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
