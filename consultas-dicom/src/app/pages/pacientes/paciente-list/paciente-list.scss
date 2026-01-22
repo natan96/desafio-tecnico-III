@@ -1,0 +1,20 @@
+.table {
+  th {
+    font-weight: 600;
+    color: #495057;
+    border-bottom: 2px solid #dee2e6;
+  }
+
+  td {
+    vertical-align: middle;
+  }
+}
+
+.card {
+  border: none;
+  border-radius: 10px;
+}
+
+.pagination {
+  margin-top: 1rem;
+}

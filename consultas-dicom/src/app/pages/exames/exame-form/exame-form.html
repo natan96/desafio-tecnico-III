@@ -1,0 +1,159 @@
+<div class="container-fluid py-4">
+  <div class="row justify-content-center">
+    <div class="col-xl-8">
+      <div class="d-flex align-items-center mb-4">
+        <button
+          type="button"
+          class="btn btn-link text-decoration-none me-3"
+          (click)="router.navigate(['/exames'])"
+        >
+          <i class="fas fa-arrow-left"></i>
+        </button>
+        <h2 class="mb-0">
+          <i class="fas fa-x-ray me-2"></i>
+          {{ isEditing ? 'Editar exame' : 'Novo exame' }}
+        </h2>
+      </div>
+
+      <div class="card shadow-sm">
+        <div class="card-body p-4">
+          @if (networkError) {
+            <div class="alert alert-danger d-flex align-items-center justify-content-between mb-4">
+              <div>
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <strong>Erro de conexão.</strong> Não foi possível carregar os dados do exame.
+                Verifique sua internet e tente novamente.
+              </div>
+              <button type="button" class="btn btn-danger" (click)="loadExame(exameId!)">
+                <i class="fas fa-redo me-2"></i>Tentar Novamente
+              </button>
+            </div>
+          }
+          <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <!-- Dados do exame -->
+            <h5 class="mb-3 text-primary">
+              <i class="fas fa-file-medical me-2"></i>Dados do exame
+            </h5>
+
+            @if (!isEditing) {
+              <input type="hidden" formControlName="idempotencyKey" />
+            }
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Paciente <span class="text-danger">*</span></label>
+
+                <!-- Campo de busca -->
+                <div class="mb-2">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Buscar por nome ou CPF..."
+                    (input)="onSearchChange($event)"
+                    [disabled]="loadingPacientes()"
+                  />
+                </div>
+
+                <!-- Select de pacientes -->
+                <div class="select-wrapper position-relative">
+                  <select
+                    class="form-select"
+                    formControlName="pacienteId"
+                    [class.is-invalid]="isFieldInvalid('pacienteId')"
+                    size="10"
+                  >
+                    <option value="">Selecione um paciente</option>
+                    @for (paciente of pacientes; track paciente.id) {
+                      <option [value]="paciente.id">
+                        {{ paciente.nome }} - {{ paciente.documento | mask: '000.000.000-00' }}
+                      </option>
+                    }
+                  </select>
+
+                  <!-- Loading spinner -->
+                  @if (loadingPacientes()) {
+                    <div class="position-absolute top-50 start-50 translate-middle">
+                      <div class="spinner-border spinner-border-sm text-primary" role="status">
+                        <span class="visually-hidden">Carregando...</span>
+                      </div>
+                    </div>
+                  }
+                </div>
+
+                <!-- Botão Carregar mais -->
+                @if (hasMorePacientes && !loadingPacientes()) {
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-primary w-100 mt-2"
+                    (click)="loadMorePacientes()"
+                  >
+                    <i class="fas fa-arrow-down me-2"></i>Carregar mais...
+                  </button>
+                }
+
+                @if (isFieldInvalid('pacienteId')) {
+                  <div class="invalid-feedback d-block">{{ getFieldError('pacienteId') }}</div>
+                }
+              </div>
+              <div class="col-md-6">
+                <div class="row">
+                  <div class="col-md-12 mb-3">
+                    <label class="form-label">Modalidade <span class="text-danger">*</span></label>
+                    <select
+                      class="form-select"
+                      formControlName="modalidade"
+                      [class.is-invalid]="isFieldInvalid('modalidade')"
+                    >
+                      <option value="">Selecione uma modalidade</option>
+                      @for (modalidade of modalidades; track modalidade) {
+                        <option [value]="modalidade">
+                          {{ modalidade }} - {{ getModalidadeLabel(modalidade) }}
+                        </option>
+                      }
+                    </select>
+                    @if (isFieldInvalid('modalidade')) {
+                      <div class="invalid-feedback">{{ getFieldError('modalidade') }}</div>
+                    }
+                  </div>
+
+                  <div class="col-md-12 mb-3">
+                    <label class="form-label"
+                      >Data e hora do exame <span class="text-danger">*</span></label
+                    >
+                    <input
+                      type="datetime-local"
+                      class="form-control"
+                      formControlName="dataExame"
+                      [class.is-invalid]="isFieldInvalid('dataExame')"
+                    />
+                    @if (isFieldInvalid('dataExame')) {
+                      <div class="invalid-feedback">{{ getFieldError('dataExame') }}</div>
+                    }
+                  </div>
+                </div>
+              </div>
+
+              <!-- Botões -->
+              <div class="d-flex justify-content-end gap-2 mt-4">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  (click)="router.navigate(['/exames'])"
+                  [disabled]="loading"
+                >
+                  Cancelar
+                </button>
+                <button type="submit" class="btn btn-primary" [disabled]="loading">
+                  @if (loading) {
+                    <span class="spinner-border spinner-border-sm me-2"></span>
+                  }
+                  {{ isEditing ? 'Atualizar' : 'Cadastrar' }}
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

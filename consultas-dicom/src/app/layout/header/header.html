@@ -1,0 +1,45 @@
+<div class="header">
+  <!-- Botão toggle desktop -->
+  <button class="toggle-btn d-none d-md-block" (click)="toggleSidebar.emit()">
+    <i class="fas fa-bars"></i>
+  </button>
+
+  <!-- Botão menu mobile -->
+  <button class="toggle-btn d-md-none" (click)="toggleOffcanvas()">
+    <i class="fas fa-bars"></i>
+  </button>
+
+  <div class="d-flex align-items-center">
+    <i class="fa-solid fa-circle-user fa-2x"></i>
+  </div>
+</div>
+
+<!-- Offcanvas para mobile -->
+<div class="offcanvas-backdrop" [class.show]="showOffcanvas" (click)="closeOffcanvas()"></div>
+<div class="offcanvas offcanvas-start" [class.show]="showOffcanvas">
+  <div class="offcanvas-header">
+    <div class="d-flex align-items-center">
+      <img src="assets/img/logo-md.png" alt="Logo" class="logo me-2" />
+      <h5 class="mb-0">Consultas DICOM</h5>
+    </div>
+    <button type="button" class="btn-close bt-h-3rem" (click)="closeOffcanvas()"></button>
+  </div>
+  <div class="offcanvas-body">
+    <ul class="list-unstyled">
+      @for (item of menuItems; track item.route) {
+        <li>
+          <a
+            [routerLink]="item.route"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: item.route === '/' }"
+            class="d-flex align-items-center menu-item"
+            (click)="closeOffcanvas()"
+          >
+            <i class="fa-solid {{ item.icon }} me-3"></i>
+            <span>{{ item.label }}</span>
+          </a>
+        </li>
+      }
+    </ul>
+  </div>
+</div>

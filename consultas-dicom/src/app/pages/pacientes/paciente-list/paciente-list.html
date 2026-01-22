@@ -1,0 +1,96 @@
+<div class="container-fluid py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0"><i class="fas fa-users me-2"></i>Pacientes</h2>
+    <a routerLink="/pacientes/novo" class="btn btn-primary">
+      <i class="fas fa-plus me-2"></i>Novo Paciente
+    </a>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+      @if (networkError) {
+        <div class="alert alert-danger d-flex align-items-center justify-content-between">
+          <div>
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <strong>Erro de conexão.</strong> Não foi possível carregar os dados. Verifique sua
+            internet e tente novamente.
+          </div>
+          <button class="btn btn-danger" (click)="loadPacientes()">
+            <i class="fas fa-redo me-2"></i>Tentar Novamente
+          </button>
+        </div>
+      } @else if (loading) {
+        <div class="text-center py-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Carregando...</span>
+          </div>
+        </div>
+      } @else {
+        @if (pacientes.length === 0) {
+          <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>Nenhum paciente cadastrado.
+          </div>
+        } @else {
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>CPF</th>
+                  <th>Celular</th>
+                  <th>Data Nascimento</th>
+                  <th>Cidade</th>
+                  <th class="text-center">Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (paciente of pacientes; track paciente.id) {
+                  <tr>
+                    <td>{{ paciente.nome }}</td>
+                    <td>{{ paciente.documento | mask: '000.000.000-00' }}</td>
+                    <td>{{ paciente.celular | mask: '(00) 00000-0000' }}</td>
+                    <td>{{ paciente.dataNascimento | date: 'dd/MM/yyyy' }}</td>
+                    <td>{{ paciente.cidade }}-{{ paciente.uf }}</td>
+                    <td class="text-center">
+                      <a
+                        [routerLink]="['/pacientes/editar', paciente.id]"
+                        class="btn btn-sm btn-outline-primary m-1"
+                        title="Editar"
+                      >
+                        <i class="fas fa-edit"></i>
+                      </a>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+
+          @if (meta && meta.lastPage > 1) {
+            <nav aria-label="Paginação">
+              <ul class="pagination justify-content-center mb-0">
+                <li class="page-item" [class.disabled]="!meta.prev">
+                  <button class="page-link" (click)="goToPage(meta.prev!)" [disabled]="!meta.prev">
+                    Anterior
+                  </button>
+                </li>
+                @for (page of pages; track page) {
+                  <li class="page-item" [class.active]="page === meta.currentPage">
+                    <button class="page-link" (click)="goToPage(page)">
+                      {{ page }}
+                    </button>
+                  </li>
+                }
+                <li class="page-item" [class.disabled]="!meta.next">
+                  <button class="page-link" (click)="goToPage(meta.next!)" [disabled]="!meta.next">
+                    Próximo
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          }
+        }
+      }
+    </div>
+  </div>
+</div>

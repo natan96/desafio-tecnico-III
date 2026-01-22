@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `pacientes` ADD COLUMN `dataCriacao` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3);

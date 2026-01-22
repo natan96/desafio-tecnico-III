@@ -1,0 +1,13 @@
+<div class="layout">
+  <!-- Sidebar -->
+  <app-sidebar [collapsed]="isCollapsed"></app-sidebar>
+
+  <!-- Main Section -->
+  <div class="main" [class.collapsed]="isCollapsed">
+    <app-header (toggleSidebar)="toggleSidebar()"></app-header>
+
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

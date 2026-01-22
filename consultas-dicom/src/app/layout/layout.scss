@@ -1,0 +1,30 @@
+.layout {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.main {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  transition: margin-left 0.3s ease;
+  background: #f5f6fa;
+  overflow-y: auto;
+  height: 100vh;
+
+  .collapsed {
+    margin-left: 60px;
+  }
+}
+
+.content {
+  padding: 20px;
+  flex: 1;
+}
+
+@media screen and (max-width: 768px) {
+  .content {
+    padding: 16px !important;
+  }
+}

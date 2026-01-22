@@ -1,0 +1,93 @@
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-12">
+      <h2 class="mb-4"><i class="fas fa-calendar-alt me-2"></i>Calendário de exames</h2>
+    </div>
+  </div>
+
+  <div class="row g-3">
+    <div class="col-12 col-xl-4 order-1 order-xl-2">
+      @if (isBrowser) {
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <h6 class="card-title mb-3"><i class="fas fa-calendar me-2"></i>Calendário</h6>
+            <div class="d-flex justify-content-center">
+              <div class="max-w-md-calendar">
+                <full-calendar #calendar [options]="calendarOptions"></full-calendar>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="col-12 col-xl-8 order-2 order-xl-1">
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">
+            <i class="fas fa-calendar-check me-2"></i>
+            Pacientes com Exames - {{ textoData() }}
+          </h5>
+        </div>
+        <div class="card-body">
+          @if (networkError) {
+            <div class="alert alert-danger d-flex align-items-center justify-content-between mb-0">
+              <div>
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <strong>Erro de conexão.</strong> Não foi possível carregar os dados. Verifique sua
+                internet e tente novamente.
+              </div>
+              <button class="btn btn-danger" (click)="loadPacientesPorData(dataSelecionada())">
+                <i class="fas fa-redo me-2"></i>Tentar Novamente
+              </button>
+            </div>
+          } @else if (loading) {
+            <div class="text-center py-4">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Carregando...</span>
+              </div>
+            </div>
+          } @else {
+            @if (pacientes.length === 0) {
+              <div class="alert alert-info mb-0">
+                <i class="fas fa-info-circle me-2"></i>
+                Nenhum exame agendado.
+              </div>
+            } @else {
+              <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                  <thead>
+                    <tr>
+                      <th>Nome</th>
+                      <th>CPF</th>
+                      <th>Modalidade</th>
+                      <th>Horário</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (paciente of pacientes; track paciente.id) {
+                      @for (exame of paciente.exames; track exame.id; let first = $first) {
+                        <tr>
+                          @if (first) {
+                            <td [attr.rowspan]="paciente.exames?.length">{{ paciente.nome }}</td>
+                            <td [attr.rowspan]="paciente.exames?.length">
+                              {{ paciente.documento | mask: '000.000.000-00' }}
+                            </td>
+                          }
+                          <td>
+                            <span class="badge bg-info">{{ exame.modalidade }}</span>
+                          </td>
+                          <td>{{ exame.dataExame | date: 'HH:mm' }}</td>
+                        </tr>
+                      }
+                    }
+                  </tbody>
+                </table>
+              </div>
+            }
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,25 @@
+.table {
+  th {
+    font-weight: 600;
+    color: #495057;
+    border-bottom: 2px solid #dee2e6;
+  }
+
+  td {
+    vertical-align: middle;
+  }
+}
+
+.card {
+  border: none;
+  border-radius: 10px;
+}
+
+.pagination {
+  margin-top: 1rem;
+}
+
+.badge {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+}
